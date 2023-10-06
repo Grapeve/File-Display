@@ -20,6 +20,7 @@ declare module 'vue' {
     FileUploader: typeof import('./src/components/FileUploader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
     UpdateLog: typeof import('./src/components/UpdateLog.vue')['default']
   }
 }

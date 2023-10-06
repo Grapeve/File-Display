@@ -189,7 +189,9 @@ const exitPreview = () => {
     </div>
     <div ref="filePreviewRef"></div>
     <!-- <div ref="imgPreviewRef"></div> -->
-    <div v-if="!isShowExitButton">123</div>
+    <div v-if="!isShowExitButton" class="bg">
+      <SvgIcon name="Radio" />
+    </div>
   </div>
 </template>
 
@@ -212,5 +214,11 @@ const exitPreview = () => {
 
 #tempTxt {
   white-space: pre-wrap;
+}
+
+.bg {
+  display: flex;
+  justify-content: center;
+  margin-top: 25vh;
 }
 </style>
