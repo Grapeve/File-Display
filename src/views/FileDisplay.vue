@@ -132,7 +132,9 @@ const handleNodeClick = async (data: Tree) => {
             <span style="font-size: 17px; color: blueviolet; margin-left: 20px"
               >I just want to preview the file on the web, that's all🌰.</span
             >
-            <span style="color: blue; margin-left: 5px">Only supports docx now.</span>
+            <span style="color: blue; margin-left: 5px; font-size: larger"
+              >supports <em>.docx .jpg .txt and .md</em> now.</span
+            >
           </div>
         </el-header>
         <!-- 文件预览区域 -->

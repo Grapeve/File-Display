@@ -26,6 +26,19 @@ onMounted(() => {
     </div>
     <div style="margin: 5px 2px">
       <el-scrollbar height="300px">
+        <!-- 2023.10.06 v1.0.4 -->
+        <div style="margin: 0 0 10px 10px">
+          <span style="color: purple; font-weight: 700">2023.10.06 v1.0.4</span>
+          <div>
+            <span style="color: #8a2be2; font-weight: 600">新功能🆕:</span>
+            <div>1. 支持Markdown和Txt文件预览。</div>
+            <div>2. 5秒内流畅加载千万字txt文件。</div>
+          </div>
+          <div>
+            <span style="color: rgb(135, 205, 231); font-weight: 600">后续更新:</span>
+            <div>1. 支持预览PDF文件。</div>
+          </div>
+        </div>
         <!-- 2023.9.24 v1.0.3 -->
         <div style="margin: 0 0 10px 10px">
           <span style="color: purple; font-weight: 700">2023.9.24 v1.0.3</span>
@@ -57,7 +70,9 @@ onMounted(() => {
           </div>
           <div>2. 新增文件目录删除。</div>
           <div>后续更新：</div>
-          <div>1. 优化生成树形控价数据方法。⏳</div>
+          <div>
+            1. 优化生成树形控价数据方法。<el-icon style="color: blue"><Select /></el-icon>
+          </div>
           <div>
             2.
             <span style="color: red">(bug)</span

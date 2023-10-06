@@ -79,13 +79,21 @@ const renderTxt = (txt: File | undefined, renderContainer: HTMLElement) => {
   let chunks: any[] = []
   const worker = new MyWorker()
   worker.onmessage = (msg: any) => {
-    chunks.push(msg.data)
-    if (!domUpdateTimer) {
-      domUpdateTimer = setTimeout(() => {
-        divElement.innerHTML += `<pre>${chunks.join('')}</pre>`
-        chunks = []
-        domUpdateTimer = null
-      }, 200)
+    if (msg.data == 'done') {
+      ElMessage({
+        duration: 2000,
+        message: `文件加载成功🎉🎉🎉`,
+        type: 'success'
+      })
+    } else {
+      chunks.push(msg.data)
+      if (!domUpdateTimer) {
+        domUpdateTimer = setTimeout(() => {
+          divElement.innerHTML += `<pre>${chunks.join('')}</pre>`
+          chunks = []
+          domUpdateTimer = null
+        }, 200)
+      }
     }
   }
   worker.postMessage(txt)
@@ -181,6 +189,7 @@ const exitPreview = () => {
     </div>
     <div ref="filePreviewRef"></div>
     <!-- <div ref="imgPreviewRef"></div> -->
+    <div v-if="!isShowExitButton">123</div>
   </div>
 </template>
 

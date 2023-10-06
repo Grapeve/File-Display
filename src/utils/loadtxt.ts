@@ -1,3 +1,5 @@
+import { ElMessage } from 'element-plus'
+
 const chunkSize = 150000
 
 onmessage = (message) => {
@@ -13,6 +15,8 @@ onmessage = (message) => {
       postMessage(reader.result)
       if (pos < txtFile.size) {
         readChunk(pos)
+      } else {
+        postMessage('done')
       }
     }
   }
