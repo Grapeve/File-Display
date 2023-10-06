@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useFilesStore } from '@/stores/files'
 import { startLoading, endLoading } from '@/utils/loading'
+import { generateUuid } from '@/utils/uuid'
 
 const emit = defineEmits(['updateDirectionEmit'])
 const filesStore = useFilesStore()
@@ -50,13 +51,16 @@ const selectDirection = async () => {
   iconShow.value = true
 }
 
-// 递归生成文件树
-async function generateFileTree(directoryHandle: any) {
+/**
+ * 递归生成文件树
+ */
+async function generateFileTree(directoryHandle: any, parent = null) {
   const tree = {
-    id: filesStore.fileTrees.length, // 删除时有用
+    id: generateUuid(),
     label: directoryHandle.name,
     type: directoryHandle.kind,
-    children: [] as any
+    children: [] as any,
+    rootId: parent
   }
   try {
     for await (const entry of directoryHandle.entries()) {
@@ -65,13 +69,14 @@ async function generateFileTree(directoryHandle: any) {
           continue
         }
         tree.children.push({
-          id: filesStore.fileTrees.length - 1,
+          id: generateUuid(),
           label: entry[1].name,
           type: entry[1].kind,
-          handle: entry[1]
+          handle: entry[1],
+          rootId: parent ? parent : tree.id
         })
       } else if (entry[1].kind == 'directory') {
-        tree.children.push(await generateFileTree(entry[1]))
+        tree.children.push(await generateFileTree(entry[1], tree.id as any))
       }
     }
   } catch (error) {

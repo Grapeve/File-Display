@@ -9,7 +9,7 @@ export const useFilesStore = defineStore('files', () => {
 
   const fileTrees = ref<any[]>([])
   function deleteFileTree(id: number) {
-    const index = fileTrees.value.findIndex((fileTree) => fileTree.name === id)
+    const index = fileTrees.value.findIndex((fileTree) => fileTree.id === id)
     fileTrees.value.splice(index, 1)
   }
   const previewFolderId = ref<Number>()

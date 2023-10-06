@@ -16,6 +16,7 @@ interface Tree {
   children?: Tree[]
   type?: string
   id?: number
+  rootId?: any
 }
 
 const treeProps = {
@@ -23,16 +24,19 @@ const treeProps = {
   label: 'label'
 }
 
-// 树形控件数据
+// 生成树形控件数据
 const treeData = ref<Tree[]>([])
 const updateDirection = () => {
-  treeData.value = [] // TODO: 已经渲染好的数据不应该变空重置，应该直接加入新的树形数据。(X)
+  // 已经渲染好的数据不应该变空重置，应该直接加入新的树形数据
+  // treeData.value = []
   // filesStore.fileTrees.forEach((fileTree: any) => {
   //   const tree = convertFileTreeData(fileTree) as Tree
   //   treeData.value?.push(tree)
   // })
   filesStore.fileTrees.forEach((fileTree: any) => {
-    treeData.value?.push(fileTree)
+    if (!treeData.value.find((treeNode) => treeNode.id == fileTree.id)) {
+      treeData.value?.push(fileTree)
+    }
   })
 }
 
@@ -62,7 +66,9 @@ const remove = (node: Node, data: Tree) => {
   // treeData.value = [...treeData.value] // TODO: 由于我只删根文件夹, 这段代码似乎没意义?
   filesStore.deleteFolderId = data.id
   filesStore.deleteFileTree(data.id!)
-  treeNodeSelect.value = undefined // TODO: 不用undefined有没有更好的方法?
+  if (filesStore.deleteFolderId == filesStore.previewFolderId) {
+    treeNodeSelect.value = undefined // TODO: 不用undefined有没有更好的方法?
+  }
   ElMessage({
     duration: 1500,
     message: '文件夹删除成功',
@@ -75,7 +81,7 @@ const filePreviewRef = ref()
 const handleNodeClick = async (data: Tree) => {
   if (!data.children) {
     treeNodeSelect.value = await data.handle?.getFile()
-    filesStore.previewFolderId = data.id
+    filesStore.previewFolderId = data.rootId
   }
 }
 </script>
@@ -119,6 +125,7 @@ const handleNodeClick = async (data: Tree) => {
         </div>
       </el-aside>
       <el-container>
+        <!-- 网站简介 -->
         <el-header height="10vh" class="file-display-header">
           <div style="height: 100%; display: flex; align-items: center">
             <div style="font-size: 24px">🍞 File-Display v{{ packageJson.version }}</div>
@@ -128,6 +135,7 @@ const handleNodeClick = async (data: Tree) => {
             <span style="color: blue; margin-left: 5px">Only supports docx now.</span>
           </div>
         </el-header>
+        <!-- 文件预览区域 -->
         <el-main class="file-display-main">
           <FilePreview :fileSelect="treeNodeSelect" ref="filePreviewRef" />
         </el-main>

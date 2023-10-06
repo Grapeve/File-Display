@@ -28,7 +28,24 @@ const renderDocx = (file: File | undefined, renderContainer: HTMLElement) => {
   let fileReader = new FileReader()
   fileReader.readAsArrayBuffer(file as File)
   fileReader.onload = () => {
-    renderAsync(fileReader.result, divElement)
+    renderAsync(fileReader.result, divElement, undefined, {
+      inWrapper: true,
+      ignoreWidth: false,
+      ignoreHeight: false,
+      ignoreFonts: false,
+      breakPages: true,
+      ignoreLastRenderedPageBreak: false,
+      experimental: false,
+      trimXmlDeclaration: true,
+      useBase64URL: false,
+      useMathMLPolyfill: false,
+      renderChanges: false,
+      renderHeaders: true,
+      renderFooters: true,
+      renderFootnotes: true,
+      renderEndnotes: true,
+      debug: false
+    })
   }
 }
 // 移除渲染的docx
@@ -80,7 +97,7 @@ watch(file, (newFile) => {
   } else {
     // 删除文件夹操作,实际已删除,退出预览即可
     // 如果删除的文件夹不是正在预览的，不退出预览
-    if (filesStore.deleteFolderId != filesStore.previewFolderId) {
+    if (filesStore.deleteFolderId == filesStore.previewFolderId) {
       exitPreview()
     }
   }
