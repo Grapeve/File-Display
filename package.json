@@ -34,6 +34,7 @@
     "docx-preview": "^0.1.18",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
+    "marked": "^9.1.0",
     "npm-run-all2": "^6.0.6",
     "prettier": "^3.0.3",
     "typescript": "~5.2.0",

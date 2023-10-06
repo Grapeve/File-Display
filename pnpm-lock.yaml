@@ -64,6 +64,9 @@ devDependencies:
   eslint-plugin-vue:
     specifier: ^9.17.0
     version: registry.npmmirror.com/eslint-plugin-vue@9.17.0(eslint@8.49.0)
+  marked:
+    specifier: ^9.1.0
+    version: registry.npmmirror.com/marked@9.1.0
   npm-run-all2:
     specifier: ^6.0.6
     version: registry.npmmirror.com/npm-run-all2@6.0.6
@@ -2372,6 +2375,14 @@ packages:
       pify: registry.npmmirror.com/pify@4.0.1
       semver: registry.npmmirror.com/semver@5.7.2
     optional: true
+
+  registry.npmmirror.com/marked@9.1.0:
+    resolution: {integrity: sha512-VZjm0PM5DMv7WodqOUps3g6Q7dmxs9YGiFUZ7a2majzQTTCgX+6S6NAJHPvOhgFBzYz8s4QZKWWMfZKFmsfOgA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/marked/-/marked-9.1.0.tgz}
+    name: marked
+    version: 9.1.0
+    engines: {node: '>= 16'}
+    hasBin: true
+    dev: true
 
   registry.npmmirror.com/memoize-one@6.0.0:
     resolution: {integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/memoize-one/-/memoize-one-6.0.0.tgz}

@@ -4,6 +4,8 @@ import { ref, computed, watch } from 'vue'
 // import '@vue-office/docx/lib/index.css'
 import { renderAsync } from 'docx-preview'
 import { ElMessage } from 'element-plus'
+import { marked } from 'marked'
+import MyWorker from '@/utils/loadtxt.ts?worker'
 
 import { useFilesStore } from '@/stores/files'
 const filesStore = useFilesStore()
@@ -48,10 +50,57 @@ const renderDocx = (file: File | undefined, renderContainer: HTMLElement) => {
     })
   }
 }
-// 移除渲染的docx
+
+// 渲染md
+const renderMd = (md: File | undefined, renderContainer: HTMLElement) => {
+  clearRenderDocx()
+  clearRenderImage()
+  const divElement = document.createElement('div')
+  divElement.id = 'tempMd'
+  renderContainer.appendChild(divElement)
+  const reader = new FileReader()
+  reader.readAsText(md!)
+  reader.onload = () => {
+    const markdown = reader.result
+    const html = marked.parse(markdown as string)
+    divElement.innerHTML = html
+  }
+}
+
+// 渲染txt
+const renderTxt = (txt: File | undefined, renderContainer: HTMLElement) => {
+  clearRenderDocx()
+  clearRenderImage()
+  const divElement = document.createElement('div')
+  divElement.id = 'tempTxt'
+  renderContainer.appendChild(divElement)
+
+  let domUpdateTimer: number | null
+  let chunks: any[] = []
+  const worker = new MyWorker()
+  worker.onmessage = (msg: any) => {
+    chunks.push(msg.data)
+    if (!domUpdateTimer) {
+      domUpdateTimer = setTimeout(() => {
+        divElement.innerHTML += `<pre>${chunks.join('')}</pre>`
+        chunks = []
+        domUpdateTimer = null
+      }, 200)
+    }
+  }
+  worker.postMessage(txt)
+}
+
+// 移除渲染的docx、md、txt
 const clearRenderDocx = () => {
   if (document.getElementById('tempDocx')) {
     filePreviewRef.value?.removeChild(document.getElementById('tempDocx')!)
+  }
+  if (document.getElementById('tempMd')) {
+    filePreviewRef.value?.removeChild(document.getElementById('tempMd')!)
+  }
+  if (document.getElementById('tempTxt')) {
+    filePreviewRef.value?.removeChild(document.getElementById('tempTxt')!)
   }
 }
 
@@ -72,7 +121,7 @@ const renderImage = (img: File | undefined, renderContainer: HTMLElement) => {
 // 移除渲染的image
 const clearRenderImage = () => {
   if (document.getElementById('tempImg')) {
-    imgPreviewRef.value?.removeChild(document.getElementById('tempImg')!)
+    filePreviewRef.value?.removeChild(document.getElementById('tempImg')!)
   }
 }
 
@@ -85,9 +134,14 @@ watch(file, (newFile) => {
     if (newFile.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       renderDocx(newFile, filePreviewRef.value!)
     } else if (newFile.type.includes('image')) {
-      renderImage(newFile, imgPreviewRef.value!)
+      renderImage(newFile, filePreviewRef.value!)
+    } else if (newFile.name.slice(-2) == 'md') {
+      renderMd(newFile, filePreviewRef.value!)
+    } else if (newFile.type == 'text/plain') {
+      renderTxt(newFile, filePreviewRef.value!)
     } else {
       isShowExitButton.value = false
+      console.log(newFile)
       ElMessage({
         duration: 2000,
         message: '此文档格式不支持！',
@@ -126,13 +180,13 @@ const exitPreview = () => {
       <span>文件名：{{ fileSelect?.name }}</span>
     </div>
     <div ref="filePreviewRef"></div>
-    <div ref="imgPreviewRef"></div>
+    <!-- <div ref="imgPreviewRef"></div> -->
   </div>
 </template>
 
 <style lang="less" scoped>
 .file-preview-container {
-  width: 900px;
+  width: 1100px;
   overflow-x: auto;
 }
 
@@ -141,5 +195,13 @@ const exitPreview = () => {
   margin-bottom: 5px;
   display: flex;
   place-items: center;
+}
+// .fileStyle {
+//   border: 1px solid #ccc;
+//   padding: 10px;
+// }
+
+#tempTxt {
+  white-space: pre-wrap;
 }
 </style>
